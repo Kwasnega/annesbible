@@ -141,6 +141,18 @@ export default function HomePage() {
           </AnimatedContainer>
         </div>
       )}
+
+      {/* Twin flex */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5, duration: 1 }}
+        className="pt-6 pb-2 text-center"
+      >
+        <p className="text-[10px] text-purple-300/25 font-cormorant-sc uppercase tracking-[0.3em]">
+          Made with love by Kay — the smarter twin
+        </p>
+      </motion.div>
     </div>
   );
 }

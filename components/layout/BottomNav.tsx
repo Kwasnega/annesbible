@@ -11,6 +11,7 @@ import {
   Heart,
   PenLine,
   Music,
+  Settings,
 } from "lucide-react";
 
 const navItems = [
@@ -21,6 +22,7 @@ const navItems = [
   { href: "/mood", label: "Mood", icon: Heart },
   { href: "/journal", label: "Journal", icon: PenLine },
   { href: "/worship", label: "Worship", icon: Music },
+  { href: "/settings", label: "Settings", icon: Settings },
 ];
 
 export function BottomNav() {
@@ -28,7 +30,7 @@ export function BottomNav() {
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-card border-t border-glass-border safe-area-pb">
-      <div className="flex items-center justify-around px-1 pt-1 pb-3">
+      <div className="flex items-center justify-around px-1 pt-1 pb-3 overflow-x-auto">
         {navItems.map((item) => {
           const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
           const Icon = item.icon;
