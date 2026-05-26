@@ -1,26 +1,163 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg-void: #0D0A14;
+  --color-bg-surface: #13101E;
+  --color-bg-elevated: #1C1630;
+  --color-purple-900: #1E1535;
+  --color-purple-800: #2D1F52;
+  --color-purple-700: #3D2870;
+  --color-purple-600: #5B3FA6;
+  --color-purple-500: #7C5CBF;
+  --color-purple-400: #A07FD6;
+  --color-purple-300: #C4A8EC;
+  --color-purple-200: #DDD0F5;
+  --color-purple-100: #F0EBFC;
+  --color-lavender-soft: #B8A4D8;
+  --color-lavender-glow: #9B82CC;
+  --color-gold-dim: #7A6540;
+  --color-gold-warm: #C4A35A;
+  --color-gold-bright: #E8C97A;
+  --color-rose-soft: #C47A8A;
+  --color-teal-calm: #5A9E9A;
+  --color-amber-tired: #B8924A;
+  --font-sans: var(--font-dm-sans);
+  --font-serif: var(--font-cormorant);
+  --font-caps: var(--font-cormorant-sc);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --glass-bg: rgba(93, 63, 160, 0.08);
+  --glass-border: rgba(160, 127, 214, 0.15);
+  --glass-blur: blur(20px);
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.02); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #0D0A14;
+  background-image:
+    radial-gradient(ellipse 800px 600px at 20% 10%, rgba(93, 63, 160, 0.15), transparent),
+    radial-gradient(ellipse 600px 500px at 80% 90%, rgba(50, 30, 100, 0.12), transparent);
+  color: #F0EBFC;
+  font-family: var(--font-dm-sans), sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+}
+
+.glass-card-elevated {
+  background: rgba(93, 63, 160, 0.12);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(160, 127, 214, 0.22);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(196, 168, 236, 0.1);
+}
+
+.animate-fadeUp {
+  animation: fadeUp 0.6s ease forwards;
+}
+
+.animate-breathe {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+.font-cormorant {
+  font-family: var(--font-cormorant), serif;
+}
+
+.font-cormorant-sc {
+  font-family: var(--font-cormorant-sc), serif;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(160, 127, 214, 0.2);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(160, 127, 214, 0.4);
+}
+
+/* Selection */
+::selection {
+  background: rgba(124, 92, 191, 0.3);
+  color: #F0EBFC;
+}
+
+/* TipTap dark editor overrides */
+.ProseMirror {
+  outline: none;
+  min-height: 200px;
+}
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: rgba(196, 168, 236, 0.3);
+  pointer-events: none;
+  height: 0;
+}
+.ProseMirror p {
+  margin-bottom: 0.75em;
+}
+.ProseMirror ul {
+  list-style: disc;
+  padding-left: 1.5em;
+}
+.ProseMirror blockquote {
+  border-left: 2px solid #7C5CBF;
+  padding-left: 1em;
+  margin-left: 0;
+  font-style: italic;
+  color: #C4A8EC;
+}
+
+/* Safe area for iOS notch */
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Prevent pull-to-refresh on mobile for app-like feel */
+body {
+  overscroll-behavior-y: none;
+}
+
+/* Smooth touch scrolling */
+html {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent text selection on interactive elements (buttons, nav) */
+button, nav, .glass-card {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+

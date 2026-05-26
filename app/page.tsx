@@ -1,65 +1,140 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import Link from "next/link";
+import { useReadingStore } from "@/lib/store/useReadingStore";
+import { useJournalStore } from "@/lib/store/useJournalStore";
+import { getGreeting, formatShortDate } from "@/lib/utils/date";
+import { getBookById } from "@/lib/bible/books";
+import { MOODS } from "@/lib/bible/moodVerses";
+import { GlassCard } from "@/components/ui/GlassCard";
+import { Button } from "@/components/ui/Button";
+import { Bookmark, ArrowRight, PenLine } from "lucide-react";
+
+const DAILY_VERSES = [
+  { ref: "Philippians 4:7", text: "And the peace of God, which transcends all understanding, will guard your hearts and your minds in Christ Jesus." },
+  { ref: "Psalm 46:10", text: "Be still, and know that I am God; I will be exalted among the nations, I will be exalted in the earth." },
+  { ref: "Isaiah 41:10", text: "So do not fear, for I am with you; do not be dismayed, for I am your God. I will strengthen you and help you." },
+];
+
+function getDailyVerse() {
+  const dayOfYear = Math.floor(
+    (new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24)
+  );
+  return DAILY_VERSES[dayOfYear % DAILY_VERSES.length];
+}
+
+export default function HomePage() {
+  const { lastBookId, lastChapter } = useReadingStore();
+  const { entries } = useJournalStore();
+  const dailyVerse = getDailyVerse();
+  const lastBook = lastBookId ? getBookById(lastBookId) : null;
+  const recentEntries = entries.slice(0, 2);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="p-6 md:p-10 max-w-5xl mx-auto space-y-8">
+      <header className="space-y-1">
+        <h1 className="font-cormorant text-3xl md:text-4xl font-light text-purple-100">
+          {getGreeting()}, Anne.
+        </h1>
+        <p className="text-purple-200/50 text-sm">
+          {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+        </p>
+      </header>
+
+      {/* Daily Verse */}
+      <GlassCard elevated className="p-6 sm:p-8 relative overflow-hidden">
+        <div className="absolute inset-0 rounded-[20px] border border-purple-400/20 animate-breathe pointer-events-none" />
+        <div className="relative space-y-4">
+          <div className="flex items-center gap-2 text-purple-300/60 text-xs font-cormorant-sc uppercase tracking-widest">
+            <span className="w-8 h-[1px] bg-purple-300/30" />
+            Verse of the Day
+          </div>
+          <p className="font-cormorant text-xl md:text-2xl font-light leading-relaxed text-purple-100 max-w-3xl">
+            &ldquo;{dailyVerse.text}&rdquo;
           </p>
+          <p className="font-cormorant-sc text-sm text-purple-300/70">{dailyVerse.ref}</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      </GlassCard>
+
+      {/* Continue Reading */}
+      {lastBook && lastChapter && (
+        <GlassCard className="p-6 flex items-center justify-between group">
+          <div className="space-y-1">
+            <p className="text-xs text-purple-200/40 font-cormorant-sc uppercase tracking-wider">Continue Reading</p>
+            <p className="font-cormorant text-xl text-purple-100">
+              {lastBook.name} {lastChapter}
+            </p>
+          </div>
+          <Link
+            href={`/bible/${lastBook.name.toLowerCase().replace(/\s+/g, "-")}/${lastChapter}`}
+            className="p-3 rounded-xl bg-purple-800/20 text-purple-300 hover:bg-purple-700/30 hover:text-purple-100 transition-all duration-300"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <ArrowRight className="w-5 h-5" />
+          </Link>
+        </GlassCard>
+      )}
+
+      {/* Mood Quick Select */}
+      <div className="space-y-3">
+        <p className="text-xs text-purple-200/40 font-cormorant-sc uppercase tracking-wider">How are you feeling?</p>
+        <div className="flex flex-wrap gap-2">
+          {MOODS.map((m) => (
+            <Link
+              key={m.key}
+              href={`/mood?mood=${m.key}`}
+              className="px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-300 border min-h-[40px] flex items-center"
+              style={{
+                borderColor: `${m.color}30`,
+                color: m.color,
+                background: `${m.color}10`,
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.background = `${m.color}25`;
+                (e.currentTarget as HTMLElement).style.borderColor = `${m.color}60`;
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.background = `${m.color}10`;
+                (e.currentTarget as HTMLElement).style.borderColor = `${m.color}30`;
+              }}
+            >
+              {m.emoji} {m.label}
+            </Link>
+          ))}
         </div>
-      </main>
+      </div>
+
+      {/* Recent Journal */}
+      {recentEntries.length > 0 && (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-purple-200/40 font-cormorant-sc uppercase tracking-wider">Recent Journal</p>
+            <Link href="/journal" className="text-xs text-purple-400 hover:text-purple-300 transition-colors">
+              View all
+            </Link>
+          </div>
+          <div className="grid gap-3 md:grid-cols-2">
+            {recentEntries.map((entry) => (
+              <Link key={entry.id} href={`/journal/${entry.id}`}>
+                <GlassCard className="p-5 hover:bg-purple-800/10 transition-all duration-300 group">
+                  <div className="flex items-center gap-2 mb-2">
+                    <PenLine className="w-3.5 h-3.5 text-purple-300/50" />
+                    <span className="text-xs text-purple-200/40">{formatShortDate(entry.createdAt)}</span>
+                    {entry.mood && (
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-800/30 text-purple-300/70">
+                        {entry.mood}
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="font-cormorant text-lg text-purple-100 mb-1 group-hover:text-purple-200 transition-colors">
+                    {entry.title || "Untitled Entry"}
+                  </h3>
+                  <p className="text-sm text-purple-200/40 line-clamp-2">{entry.content.replace(/<[^>]*>/g, " ").trim()}</p>
+                </GlassCard>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
