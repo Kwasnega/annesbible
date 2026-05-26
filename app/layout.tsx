@@ -4,6 +4,7 @@ import "./globals.css";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { PageWrapper } from "@/components/layout/PageWrapper";
+import { SplashProvider } from "@/components/SplashProvider";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -49,13 +50,15 @@ export default function RootLayout({
       className={`${dmSans.variable} ${cormorant.variable} ${cormorantSC.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <div className="flex flex-1 min-h-screen">
-          <Sidebar />
-          <main className="flex-1 flex flex-col pb-16 md:pb-0 md:pl-[240px]">
-            <PageWrapper>{children}</PageWrapper>
-          </main>
-        </div>
-        <BottomNav />
+        <SplashProvider>
+          <div className="flex flex-1 min-h-screen">
+            <Sidebar />
+            <main className="flex-1 flex flex-col pb-16 md:pb-0 md:pl-[240px]">
+              <PageWrapper>{children}</PageWrapper>
+            </main>
+          </div>
+          <BottomNav />
+        </SplashProvider>
       </body>
     </html>
   );
