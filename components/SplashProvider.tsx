@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import { SplashScreen } from "./SplashScreen";
 
 export function SplashProvider({ children }: { children: React.ReactNode }) {
   const [showSplash, setShowSplash] = useState(true);
   const [ready, setReady] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const seen = localStorage.getItem("annes-splash-seen");
@@ -19,6 +21,10 @@ export function SplashProvider({ children }: { children: React.ReactNode }) {
   const handleComplete = () => {
     localStorage.setItem("annes-splash-seen", "true");
     setShowSplash(false);
+    // After first-time splash, ensure user lands on home page
+    if (typeof window !== "undefined" && window.location.pathname !== "/") {
+      router.replace("/");
+    }
   };
 
   if (!ready) {
