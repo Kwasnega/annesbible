@@ -1,55 +1,41 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { AnimatedContainer, AnimatedItem } from "@/components/ui/AnimatedContainer";
-import { CloudRain, Piano, Trees, Volume2 } from "lucide-react";
+import { CloudRain, Piano, Trees, Play, Pause } from "lucide-react";
+import { motion } from "framer-motion";
 
-const AMBIENT_TRACKS = [
-  { key: "rain", label: "Rain", emoji: "🌧", icon: CloudRain },
-  { key: "piano", label: "Piano", emoji: "🎹", icon: Piano },
-  { key: "nature", label: "Nature", emoji: "🌿", icon: Trees },
+interface AmbientTrack {
+  key: string;
+  label: string;
+  emoji: string;
+  icon: React.ElementType;
+  youtubeId: string;
+}
+
+const AMBIENT_TRACKS: AmbientTrack[] = [
+  { key: "rain", label: "Rain", emoji: "🌧", icon: CloudRain, youtubeId: "jX6kn9_U8qk" },
+  { key: "piano", label: "Piano", emoji: "🎹", icon: Piano, youtubeId: "EbnH3VHzhu8" },
+  { key: "nature", label: "Nature", emoji: "🌿", icon: Trees, youtubeId: "Qm846KdZN_c" },
 ];
 
 const PLAYLISTS = [
   {
     title: "Peaceful Worship",
-    embed: "https://open.spotify.com/embed/playlist/37i9dQZF1DX3pip0etl8nP",
+    embed: "https://open.spotify.com/embed/playlist/37i9dQZF1DX9lAYMw7KoAO",
   },
   {
     title: "Hillsong Acoustic",
-    embed: "https://open.spotify.com/embed/playlist/37i9dQZF1DX0yEZ9NE9",
+    embed: "https://open.spotify.com/embed/playlist/17tw7L3cHFF9FcsFuiTcJA",
   },
 ];
 
 export default function WorshipPage() {
   const [activeSounds, setActiveSounds] = useState<Record<string, boolean>>({});
-  const [volumes, setVolumes] = useState<Record<string, number>>({ rain: 0.5, piano: 0.5, nature: 0.5 });
-  const audioRefs = useRef<Record<string, HTMLAudioElement | null>>({});
 
   const toggleSound = (key: string) => {
-    const isActive = !activeSounds[key];
-    setActiveSounds((prev) => ({ ...prev, [key]: isActive }));
-
-    let audio = audioRefs.current[key];
-    if (!audio) {
-      audio = new Audio(`/sounds/${key}.mp3`);
-      audio.loop = true;
-      audio.volume = volumes[key] || 0.5;
-      audioRefs.current[key] = audio;
-    }
-
-    if (isActive) {
-      audio.play().catch(() => {});
-    } else {
-      audio.pause();
-    }
-  };
-
-  const setVolume = (key: string, vol: number) => {
-    setVolumes((prev) => ({ ...prev, [key]: vol }));
-    const audio = audioRefs.current[key];
-    if (audio) audio.volume = vol;
+    setActiveSounds((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
   return (
@@ -70,38 +56,50 @@ export default function WorshipPage() {
             const Icon = track.icon;
             return (
               <AnimatedItem key={track.key}>
-              <GlassCard
-                className={`p-6 text-center transition-all duration-200 cursor-pointer active:scale-[0.98] ${
-                  isActive ? "border-purple-400/40 shadow-[0_0_30px_rgba(124,92,191,0.15)]" : ""
-                }`}
-                onClick={() => toggleSound(track.key)}
-              >
-                <div
-                  className={`w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center transition-all duration-300 ${
-                    isActive
-                      ? "bg-purple-600/30 ring-2 ring-purple-400/50 shadow-[0_0_20px_rgba(124,92,191,0.3)]"
-                      : "bg-purple-800/20"
-                  }`}
-                >
-                  <Icon className={`w-7 h-7 ${isActive ? "text-purple-300" : "text-purple-300/40"}`} />
+                <div className="space-y-3">
+                  <GlassCard
+                    className={`p-6 text-center transition-all duration-200 cursor-pointer active:scale-[0.98] ${
+                      isActive ? "border-purple-400/40 shadow-[0_0_30px_rgba(124,92,191,0.15)]" : ""
+                    }`}
+                    onClick={() => toggleSound(track.key)}
+                  >
+                    <div
+                      className={`w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center transition-all duration-300 ${
+                        isActive
+                          ? "bg-purple-600/30 ring-2 ring-purple-400/50 shadow-[0_0_20px_rgba(124,92,191,0.3)]"
+                          : "bg-purple-800/20"
+                      }`}
+                    >
+                      {isActive ? (
+                        <Pause className="w-7 h-7 text-purple-300" />
+                      ) : (
+                        <Icon className="w-7 h-7 text-purple-300/40" />
+                      )}
+                    </div>
+                    <p className="font-cormorant-sc text-lg text-purple-100">{track.label}</p>
+                    <p className="text-xs text-purple-300/40 mt-1">{isActive ? "Playing" : "Tap to play"}</p>
+                  </GlassCard>
+
+                  {isActive && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                      className="overflow-hidden rounded-xl"
+                    >
+                      <iframe
+                        width="100%"
+                        height="80"
+                        src={`https://www.youtube.com/embed/${track.youtubeId}?autoplay=1&loop=1&playlist=${track.youtubeId}&rel=0&modestbranding=1`}
+                        title={`${track.label} ambient sound`}
+                        allow="autoplay; encrypted-media"
+                        className="rounded-xl"
+                        style={{ border: "none" }}
+                      />
+                    </motion.div>
+                  )}
                 </div>
-                <p className="font-cormorant-sc text-lg text-purple-100">{track.label}</p>
-                {isActive && (
-                  <div className="mt-4 flex items-center gap-3">
-                    <Volume2 className="w-4 h-4 text-purple-300/40" />
-                    <input
-                      type="range"
-                      min={0}
-                      max={1}
-                      step={0.01}
-                      value={volumes[track.key] || 0.5}
-                      onChange={(e) => setVolume(track.key, parseFloat(e.target.value))}
-                      onClick={(e) => e.stopPropagation()}
-                      className="flex-1 h-1 rounded-full appearance-none bg-purple-800/40 accent-purple-400 cursor-pointer"
-                    />
-                  </div>
-                )}
-              </GlassCard>
               </AnimatedItem>
             );
           })}
