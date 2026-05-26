@@ -76,6 +76,30 @@ export default function HomePage() {
         </GlassCard>
       )}
 
+      {/* Twin flex — glows to tease, then fades to subtle */}
+      <motion.div
+        className="pt-2 pb-2 text-center"
+        animate={{
+          opacity: [0, 0, 1, 1, 0.25],
+          filter: [
+            "drop-shadow(0 0 0px rgba(196,168,236,0))",
+            "drop-shadow(0 0 0px rgba(196,168,236,0))",
+            "drop-shadow(0 0 12px rgba(196,168,236,0.7))",
+            "drop-shadow(0 0 12px rgba(196,168,236,0.7))",
+            "drop-shadow(0 0 0px rgba(196,168,236,0))",
+          ],
+        }}
+        transition={{
+          duration: 7,
+          times: [0, 0.214, 0.357, 0.786, 1],
+          ease: "easeInOut",
+        }}
+      >
+        <p className="text-[10px] text-purple-300 font-cormorant-sc uppercase tracking-[0.3em]">
+          Made with love by Kay — the smarter twin
+        </p>
+      </motion.div>
+
       {/* Mood Quick Select */}
       <div className="space-y-3">
         <p className="text-xs text-purple-200/40 font-cormorant-sc uppercase tracking-wider">How are you feeling?</p>
@@ -141,30 +165,6 @@ export default function HomePage() {
           </AnimatedContainer>
         </div>
       )}
-
-      {/* Twin flex — glows to tease, then fades to subtle */}
-      <motion.div
-        className="pt-6 pb-2 text-center"
-        animate={{
-          opacity: [0, 0, 1, 1, 0.25],
-          filter: [
-            "drop-shadow(0 0 0px rgba(196,168,236,0))",
-            "drop-shadow(0 0 0px rgba(196,168,236,0))",
-            "drop-shadow(0 0 12px rgba(196,168,236,0.7))",
-            "drop-shadow(0 0 12px rgba(196,168,236,0.7))",
-            "drop-shadow(0 0 0px rgba(196,168,236,0))",
-          ],
-        }}
-        transition={{
-          duration: 7,
-          times: [0, 0.214, 0.357, 0.786, 1],
-          ease: "easeInOut",
-        }}
-      >
-        <p className="text-[10px] text-purple-300 font-cormorant-sc uppercase tracking-[0.3em]">
-          Made with love by Kay — the smarter twin
-        </p>
-      </motion.div>
     </div>
   );
 }

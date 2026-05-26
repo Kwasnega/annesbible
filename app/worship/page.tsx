@@ -90,8 +90,8 @@ export default function WorshipPage() {
                     >
                       <iframe
                         width="100%"
-                        height="165"
-                        src={`https://www.youtube.com/embed/${track.youtubeId}?autoplay=1&mute=1&loop=1&playlist=${track.youtubeId}&rel=0&modestbranding=1&playsinline=1`}
+                        height="200"
+                        src={`https://www.youtube.com/embed/${track.youtubeId}?autoplay=1&loop=1&playlist=${track.youtubeId}&rel=0&modestbranding=1&playsinline=1`}
                         title={`${track.label} ambient sound`}
                         allow="autoplay; encrypted-media"
                         className="rounded-xl"
