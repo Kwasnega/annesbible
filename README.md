@@ -1,4 +1,4 @@
-# Anne's Purple Bible Space
+# Annes Bible Space
 
 A deeply personal, peaceful spiritual web app for Bible reading, journaling, mood reflection, and worship — built for Anne.
 

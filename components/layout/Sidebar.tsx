@@ -31,7 +31,7 @@ export function Sidebar() {
     <aside className="hidden md:flex fixed left-0 top-0 h-screen w-[240px] flex-col glass-card border-r border-glass-border z-40">
       <div className="p-6 pb-4">
         <h1 className="font-cormorant text-xl font-semibold text-purple-100 leading-tight">
-          Anne&apos;s Purple Bible Space
+          Annes Bible Space
         </h1>
       </div>
 

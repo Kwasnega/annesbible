@@ -25,7 +25,7 @@ const cormorantSC = Cormorant_SC({
 });
 
 export const metadata: Metadata = {
-  title: "Anne's Purple Bible Space",
+  title: "Annes Bible Space",
   description: "A deeply personal, peaceful space for Bible reading, journaling, and reflection.",
 };
 
