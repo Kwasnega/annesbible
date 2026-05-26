@@ -142,14 +142,26 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* Twin flex */}
+      {/* Twin flex — glows to tease, then fades to subtle */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 1 }}
         className="pt-6 pb-2 text-center"
+        animate={{
+          opacity: [0, 0, 1, 1, 0.25],
+          filter: [
+            "drop-shadow(0 0 0px rgba(196,168,236,0))",
+            "drop-shadow(0 0 0px rgba(196,168,236,0))",
+            "drop-shadow(0 0 12px rgba(196,168,236,0.7))",
+            "drop-shadow(0 0 12px rgba(196,168,236,0.7))",
+            "drop-shadow(0 0 0px rgba(196,168,236,0))",
+          ],
+        }}
+        transition={{
+          duration: 7,
+          times: [0, 0.214, 0.357, 0.786, 1],
+          ease: "easeInOut",
+        }}
       >
-        <p className="text-[10px] text-purple-300/25 font-cormorant-sc uppercase tracking-[0.3em]">
+        <p className="text-[10px] text-purple-300 font-cormorant-sc uppercase tracking-[0.3em]">
           Made with love by Kay — the smarter twin
         </p>
       </motion.div>
