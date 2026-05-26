@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useJournalStore } from "@/lib/store/useJournalStore";
 import { formatDate, formatShortDate } from "@/lib/utils/date";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { AnimatedContainer, AnimatedItem } from "@/components/ui/AnimatedContainer";
 import { Plus, PenLine, Trash2 } from "lucide-react";
 
 export default function JournalPage() {
@@ -18,7 +19,7 @@ export default function JournalPage() {
         </header>
         <Link
           href="/journal/new"
-          className="p-3 rounded-xl bg-purple-600 text-purple-100 hover:bg-purple-500 transition-all shadow-lg shadow-purple-900/30"
+          className="p-3 rounded-xl bg-purple-600 text-purple-100 hover:bg-purple-500 transition-all shadow-lg shadow-purple-900/30 active:scale-90"
         >
           <Plus className="w-5 h-5" />
         </Link>
@@ -32,23 +33,24 @@ export default function JournalPage() {
           </p>
           <Link
             href="/journal/new"
-            className="inline-block mt-6 px-6 py-2.5 rounded-xl bg-purple-600 text-purple-100 hover:bg-purple-500 transition-all text-sm"
+            className="inline-block mt-6 px-6 py-2.5 rounded-xl bg-purple-600 text-purple-100 hover:bg-purple-500 transition-all text-sm active:scale-[0.98]"
           >
             Write your first entry
           </Link>
         </div>
       ) : (
-        <div className="relative space-y-6">
+        <AnimatedContainer className="relative space-y-6" stagger={0.1}>
           {/* Timeline line */}
           <div className="absolute left-[19px] top-2 bottom-2 w-[1px] bg-purple-700/20 hidden md:block" />
 
           {entries.map((entry) => (
-            <div key={entry.id} className="relative flex gap-4 md:gap-6 group">
+            <AnimatedItem key={entry.id}>
+            <div className="relative flex gap-4 md:gap-6 group">
               <div className="hidden md:flex flex-col items-center pt-1">
                 <div className="w-2.5 h-2.5 rounded-full bg-purple-500/40 ring-4 ring-purple-900/30" />
               </div>
-              <Link href={`/journal/${entry.id}`} className="flex-1">
-                <GlassCard className="p-5 hover:bg-purple-800/10 transition-all duration-300">
+              <Link href={`/journal/${entry.id}`} className="flex-1 active:scale-[0.99] transition-transform duration-150">
+                <GlassCard className="p-5 hover:bg-purple-800/10 transition-all duration-200">
                   <div className="flex items-center gap-3 mb-3">
                     <PenLine className="w-3.5 h-3.5 text-purple-300/50" />
                     <span className="text-xs text-purple-200/40">{formatShortDate(entry.createdAt)}</span>
@@ -70,13 +72,14 @@ export default function JournalPage() {
                 onClick={() => {
                   if (confirm("Delete this entry?")) deleteEntry(entry.id);
                 }}
-                className="md:opacity-0 md:group-hover:opacity-100 p-2.5 rounded-lg text-purple-300/30 hover:text-rose-soft hover:bg-rose-soft/10 active:text-rose-soft active:bg-rose-soft/10 transition-all self-start shrink-0"
+                className="md:opacity-0 md:group-hover:opacity-100 p-2.5 rounded-lg text-purple-300/30 hover:text-rose-soft hover:bg-rose-soft/10 active:text-rose-soft active:bg-rose-soft/10 transition-all self-start shrink-0 active:scale-90"
               >
                 <Trash2 className="w-[18px] h-[18px]" />
               </button>
             </div>
+            </AnimatedItem>
           ))}
-        </div>
+        </AnimatedContainer>
       )}
     </div>
   );

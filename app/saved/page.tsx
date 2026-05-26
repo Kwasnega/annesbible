@@ -7,6 +7,7 @@ import { getBookById } from "@/lib/bible/books";
 import { getVersesForChapter } from "@/lib/bible/data";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Modal } from "@/components/ui/Modal";
+import { AnimatedContainer, AnimatedItem } from "@/components/ui/AnimatedContainer";
 import { Input } from "@/components/ui/Input";
 import { Bookmark, Plus, Trash2, ArrowRight } from "lucide-react";
 
@@ -42,7 +43,7 @@ export default function SavedPage() {
         </header>
         <button
           onClick={() => setShowNew(true)}
-          className="p-3 rounded-xl bg-purple-600 text-purple-100 hover:bg-purple-500 transition-all shadow-lg shadow-purple-900/30"
+          className="p-3 rounded-xl bg-purple-600 text-purple-100 hover:bg-purple-500 transition-all shadow-lg shadow-purple-900/30 active:scale-90"
         >
           <Plus className="w-5 h-5" />
         </button>
@@ -56,7 +57,7 @@ export default function SavedPage() {
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <AnimatedContainer className="space-y-3" stagger={0.07}>
           {savedVerses.map((sv) => {
             const book = getBookById(sv.bookId);
             if (!book) return null;
@@ -64,7 +65,8 @@ export default function SavedPage() {
             const verse = verses.find((v) => v.verseNum === sv.verseNum);
             const slug = book.name.toLowerCase().replace(/\s+/g, "-");
             return (
-              <GlassCard key={sv.key} className="p-4 sm:p-5 hover:bg-purple-800/10 transition-all duration-300 group active:bg-purple-800/15">
+              <AnimatedItem key={sv.key}>
+              <GlassCard className="p-4 sm:p-5 hover:bg-purple-800/10 transition-all duration-200 group active:bg-purple-800/15">
                 <div className="flex items-start justify-between gap-3">
                   <Link href={`/bible/${slug}/${sv.chapter}#verse-${sv.verseNum}`} className="flex-1 space-y-2 min-w-0">
                     <div className="flex items-center gap-2">
@@ -80,16 +82,17 @@ export default function SavedPage() {
                   <div className="flex flex-col gap-2 shrink-0">
                     <button
                       onClick={() => removeVerse(sv.key)}
-                      className="p-2.5 rounded-lg text-purple-300/40 hover:text-rose-soft hover:bg-rose-soft/10 active:text-rose-soft active:bg-rose-soft/10 transition-all"
+                      className="p-2.5 rounded-lg text-purple-300/40 hover:text-rose-soft hover:bg-rose-soft/10 active:text-rose-soft active:bg-rose-soft/10 transition-all active:scale-90"
                     >
                       <Trash2 className="w-[18px] h-[18px]" />
                     </button>
                   </div>
                 </div>
               </GlassCard>
+              </AnimatedItem>
             );
           })}
-        </div>
+        </AnimatedContainer>
       )}
 
       <Modal isOpen={showNew} onClose={() => setShowNew(false)} className="space-y-4">
@@ -103,7 +106,7 @@ export default function SavedPage() {
         <div className="flex gap-2">
           <button
             onClick={() => setShowNew(false)}
-            className="flex-1 py-2.5 rounded-xl text-sm text-purple-300/60 hover:text-purple-200 transition-colors"
+            className="flex-1 py-2.5 rounded-xl text-sm text-purple-300/60 hover:text-purple-200 transition-colors active:opacity-60"
           >
             Cancel
           </button>
@@ -113,7 +116,7 @@ export default function SavedPage() {
               setShowNew(false);
               setNewRef("");
             }}
-            className="flex-1 py-2.5 rounded-xl bg-purple-600 text-purple-100 hover:bg-purple-500 transition-all text-sm"
+            className="flex-1 py-2.5 rounded-xl bg-purple-600 text-purple-100 hover:bg-purple-500 transition-all text-sm active:scale-[0.98]"
           >
             Add
           </button>

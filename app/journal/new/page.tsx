@@ -47,7 +47,7 @@ export default function NewJournalPage() {
   return (
     <div className="p-6 md:p-10 max-w-3xl mx-auto space-y-6">
       <div className="flex items-center gap-3">
-        <Link href="/journal" className="p-2 rounded-lg bg-purple-800/20 text-purple-300 hover:bg-purple-700/30 transition-all">
+        <Link href="/journal" className="p-2 rounded-lg bg-purple-800/20 text-purple-300 hover:bg-purple-700/30 transition-all active:scale-90">
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <h1 className="font-cormorant text-2xl text-purple-100">New Entry</h1>
@@ -69,7 +69,7 @@ export default function NewJournalPage() {
               <button
                 key={m.key}
                 onClick={() => setMood(mood === m.key ? null : m.key)}
-                className="px-4 py-2 rounded-full text-sm border transition-all duration-200 min-h-[40px]"
+                className="px-4 py-2 rounded-full text-sm border transition-all duration-200 min-h-[40px] active:scale-90"
                 style={{
                   borderColor: mood === m.key ? `${m.color}80` : `${m.color}20`,
                   background: mood === m.key ? `${m.color}15` : "transparent",
@@ -84,16 +84,16 @@ export default function NewJournalPage() {
 
         <div className="glass-card rounded-xl overflow-hidden">
           <div className="flex items-center gap-1 p-2 border-b border-glass-border">
-            <button onClick={() => insertFormat("**", "**")} className="p-2.5 rounded-lg hover:bg-purple-800/20 text-purple-300/60 hover:text-purple-200 active:bg-purple-800/30 transition-all">
+            <button onClick={() => insertFormat("**", "**")} className="p-2.5 rounded-lg hover:bg-purple-800/20 text-purple-300/60 hover:text-purple-200 active:bg-purple-800/30 transition-all active:scale-90">
               <Bold className="w-[18px] h-[18px]" />
             </button>
-            <button onClick={() => insertFormat("*", "*")} className="p-2.5 rounded-lg hover:bg-purple-800/20 text-purple-300/60 hover:text-purple-200 active:bg-purple-800/30 transition-all">
+            <button onClick={() => insertFormat("*", "*")} className="p-2.5 rounded-lg hover:bg-purple-800/20 text-purple-300/60 hover:text-purple-200 active:bg-purple-800/30 transition-all active:scale-90">
               <Italic className="w-[18px] h-[18px]" />
             </button>
-            <button onClick={() => insertFormat("> ", "")} className="p-2.5 rounded-lg hover:bg-purple-800/20 text-purple-300/60 hover:text-purple-200 active:bg-purple-800/30 transition-all">
+            <button onClick={() => insertFormat("> ", "")} className="p-2.5 rounded-lg hover:bg-purple-800/20 text-purple-300/60 hover:text-purple-200 active:bg-purple-800/30 transition-all active:scale-90">
               <Quote className="w-[18px] h-[18px]" />
             </button>
-            <button onClick={() => insertFormat("- ", "")} className="p-2.5 rounded-lg hover:bg-purple-800/20 text-purple-300/60 hover:text-purple-200 active:bg-purple-800/30 transition-all">
+            <button onClick={() => insertFormat("- ", "")} className="p-2.5 rounded-lg hover:bg-purple-800/20 text-purple-300/60 hover:text-purple-200 active:bg-purple-800/30 transition-all active:scale-90">
               <List className="w-[18px] h-[18px]" />
             </button>
           </div>
@@ -109,7 +109,7 @@ export default function NewJournalPage() {
         <div className="flex justify-end gap-3">
           <Link
             href="/journal"
-            className="px-5 py-2.5 rounded-xl text-sm text-purple-300/60 hover:text-purple-200 transition-colors"
+            className="px-5 py-2.5 rounded-xl text-sm text-purple-300/60 hover:text-purple-200 transition-colors active:opacity-60"
           >
             Cancel
           </Link>

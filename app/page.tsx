@@ -8,7 +8,9 @@ import { getBookById } from "@/lib/bible/books";
 import { MOODS } from "@/lib/bible/moodVerses";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Button } from "@/components/ui/Button";
+import { AnimatedContainer, AnimatedItem } from "@/components/ui/AnimatedContainer";
 import { Bookmark, ArrowRight, PenLine } from "lucide-react";
+import { motion } from "framer-motion";
 
 const DAILY_VERSES = [
   { ref: "Philippians 4:7", text: "And the peace of God, which transcends all understanding, will guard your hearts and your minds in Christ Jesus." },
@@ -58,7 +60,7 @@ export default function HomePage() {
 
       {/* Continue Reading */}
       {lastBook && lastChapter && (
-        <GlassCard className="p-6 flex items-center justify-between group">
+        <GlassCard className="p-6 flex items-center justify-between group active:scale-[0.99] transition-transform duration-150">
           <div className="space-y-1">
             <p className="text-xs text-purple-200/40 font-cormorant-sc uppercase tracking-wider">Continue Reading</p>
             <p className="font-cormorant text-xl text-purple-100">
@@ -67,7 +69,7 @@ export default function HomePage() {
           </div>
           <Link
             href={`/bible/${lastBook.name.toLowerCase().replace(/\s+/g, "-")}/${lastChapter}`}
-            className="p-3 rounded-xl bg-purple-800/20 text-purple-300 hover:bg-purple-700/30 hover:text-purple-100 transition-all duration-300"
+            className="p-3 rounded-xl bg-purple-800/20 text-purple-300 hover:bg-purple-700/30 hover:text-purple-100 transition-all duration-200 active:scale-90"
           >
             <ArrowRight className="w-5 h-5" />
           </Link>
@@ -77,12 +79,12 @@ export default function HomePage() {
       {/* Mood Quick Select */}
       <div className="space-y-3">
         <p className="text-xs text-purple-200/40 font-cormorant-sc uppercase tracking-wider">How are you feeling?</p>
-        <div className="flex flex-wrap gap-2">
+        <AnimatedContainer className="flex flex-wrap gap-2" stagger={0.04}>
           {MOODS.map((m) => (
             <Link
               key={m.key}
               href={`/mood?mood=${m.key}`}
-              className="px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-300 border min-h-[40px] flex items-center"
+              className="px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200 border min-h-[40px] flex items-center active:scale-95"
               style={{
                 borderColor: `${m.color}30`,
                 color: m.color,
@@ -97,10 +99,12 @@ export default function HomePage() {
                 (e.currentTarget as HTMLElement).style.borderColor = `${m.color}30`;
               }}
             >
-              {m.emoji} {m.label}
+              <AnimatedItem>
+                {m.emoji} {m.label}
+              </AnimatedItem>
             </Link>
           ))}
-        </div>
+        </AnimatedContainer>
       </div>
 
       {/* Recent Journal */}
@@ -108,14 +112,15 @@ export default function HomePage() {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <p className="text-xs text-purple-200/40 font-cormorant-sc uppercase tracking-wider">Recent Journal</p>
-            <Link href="/journal" className="text-xs text-purple-400 hover:text-purple-300 transition-colors">
+            <Link href="/journal" className="text-xs text-purple-400 hover:text-purple-300 transition-colors active:opacity-60">
               View all
             </Link>
           </div>
-          <div className="grid gap-3 md:grid-cols-2">
+          <AnimatedContainer className="grid gap-3 md:grid-cols-2" stagger={0.08}>
             {recentEntries.map((entry) => (
-              <Link key={entry.id} href={`/journal/${entry.id}`}>
-                <GlassCard className="p-5 hover:bg-purple-800/10 transition-all duration-300 group">
+              <Link key={entry.id} href={`/journal/${entry.id}`} className="active:scale-[0.98] transition-transform duration-150">
+                <AnimatedItem>
+                <GlassCard className="p-5 hover:bg-purple-800/10 transition-all duration-200 group">
                   <div className="flex items-center gap-2 mb-2">
                     <PenLine className="w-3.5 h-3.5 text-purple-300/50" />
                     <span className="text-xs text-purple-200/40">{formatShortDate(entry.createdAt)}</span>
@@ -130,9 +135,10 @@ export default function HomePage() {
                   </h3>
                   <p className="text-sm text-purple-200/40 line-clamp-2">{entry.content.replace(/<[^>]*>/g, " ").trim()}</p>
                 </GlassCard>
+                </AnimatedItem>
               </Link>
             ))}
-          </div>
+          </AnimatedContainer>
         </div>
       )}
     </div>

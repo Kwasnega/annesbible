@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { AnimatedContainer, AnimatedItem } from "@/components/ui/AnimatedContainer";
 import { CloudRain, Piano, Trees, Volume2 } from "lucide-react";
 
 const AMBIENT_TRACKS = [
@@ -63,14 +64,14 @@ export default function WorshipPage() {
         <h2 className="font-cormorant-sc text-xs uppercase tracking-[0.2em] text-purple-300/50">
           Ambient Sounds
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <AnimatedContainer className="grid grid-cols-1 sm:grid-cols-3 gap-4" stagger={0.08}>
           {AMBIENT_TRACKS.map((track) => {
             const isActive = activeSounds[track.key];
             const Icon = track.icon;
             return (
+              <AnimatedItem key={track.key}>
               <GlassCard
-                key={track.key}
-                className={`p-6 text-center transition-all duration-300 cursor-pointer ${
+                className={`p-6 text-center transition-all duration-200 cursor-pointer active:scale-[0.98] ${
                   isActive ? "border-purple-400/40 shadow-[0_0_30px_rgba(124,92,191,0.15)]" : ""
                 }`}
                 onClick={() => toggleSound(track.key)}
@@ -101,9 +102,10 @@ export default function WorshipPage() {
                   </div>
                 )}
               </GlassCard>
+              </AnimatedItem>
             );
           })}
-        </div>
+        </AnimatedContainer>
       </section>
 
       {/* Playlists */}

@@ -48,7 +48,7 @@ export default function EntryPage() {
     <div className="p-6 md:p-10 max-w-3xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Link href="/journal" className="p-2 rounded-lg bg-purple-800/20 text-purple-300 hover:bg-purple-700/30 transition-all">
+          <Link href="/journal" className="p-2 rounded-lg bg-purple-800/20 text-purple-300 hover:bg-purple-700/30 transition-all active:scale-90">
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div>
@@ -65,7 +65,7 @@ export default function EntryPage() {
             <>
               <button
                 onClick={() => setIsEditing(true)}
-                className="p-2.5 rounded-lg text-purple-300/40 hover:text-purple-200 hover:bg-purple-800/20 active:bg-purple-800/30 transition-all"
+                className="p-2.5 rounded-lg text-purple-300/40 hover:text-purple-200 hover:bg-purple-800/20 active:bg-purple-800/30 transition-all active:scale-90"
               >
                 <Edit2 className="w-[18px] h-[18px]" />
               </button>
@@ -76,7 +76,7 @@ export default function EntryPage() {
                     router.push("/journal");
                   }
                 }}
-                className="p-2.5 rounded-lg text-purple-300/40 hover:text-rose-soft hover:bg-rose-soft/10 active:text-rose-soft active:bg-rose-soft/10 transition-all"
+                className="p-2.5 rounded-lg text-purple-300/40 hover:text-rose-soft hover:bg-rose-soft/10 active:text-rose-soft active:bg-rose-soft/10 transition-all active:scale-90"
               >
                 <Trash2 className="w-[18px] h-[18px]" />
               </button>
@@ -84,7 +84,7 @@ export default function EntryPage() {
           ) : (
             <button
               onClick={handleSave}
-              className="px-4 py-2 rounded-xl bg-purple-600 text-purple-100 hover:bg-purple-500 transition-all text-sm"
+              className="px-4 py-2 rounded-xl bg-purple-600 text-purple-100 hover:bg-purple-500 transition-all text-sm active:scale-[0.97]"
             >
               Save
             </button>

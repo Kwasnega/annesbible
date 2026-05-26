@@ -44,7 +44,7 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
+                "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 active:scale-[0.98]",
                 isActive
                   ? "bg-purple-800/30 text-purple-100 border-l-2 border-purple-400"
                   : "text-purple-200/60 hover:text-purple-100 hover:bg-purple-800/10 border-l-2 border-transparent"
@@ -61,7 +61,7 @@ export function Sidebar() {
         <Link
           href="/settings"
           className={cn(
-            "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
+            "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 active:scale-[0.98]",
             pathname === "/settings"
               ? "bg-purple-800/30 text-purple-100 border-l-2 border-purple-400"
               : "text-purple-200/60 hover:text-purple-100 hover:bg-purple-800/10 border-l-2 border-transparent"

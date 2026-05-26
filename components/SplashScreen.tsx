@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Particle {
@@ -18,21 +18,21 @@ function generateParticles(count: number): Particle[] {
     id: i,
     x: Math.random() * 100,
     y: Math.random() * 100,
-    size: Math.random() * 2 + 1,
-    delay: Math.random() * 3,
-    duration: Math.random() * 4 + 6,
-    opacity: Math.random() * 0.5 + 0.2,
+    size: Math.random() * 2.5 + 0.5,
+    delay: Math.random() * 2,
+    duration: Math.random() * 5 + 7,
+    opacity: Math.random() * 0.4 + 0.15,
   }));
 }
 
 export function SplashScreen({ onComplete }: { onComplete: () => void }) {
   const [phase, setPhase] = useState<"enter" | "verse" | "exit" | "done">("enter");
-  const [particles] = useState(() => generateParticles(40));
+  const particles = useMemo(() => generateParticles(50), []);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase("verse"), 1800);
-    const t2 = setTimeout(() => setPhase("exit"), 4500);
-    const t3 = setTimeout(() => setPhase("done"), 5800);
+    const t1 = setTimeout(() => setPhase("verse"), 1600);
+    const t2 = setTimeout(() => setPhase("exit"), 4000);
+    const t3 = setTimeout(() => setPhase("done"), 5500);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
@@ -49,148 +49,164 @@ export function SplashScreen({ onComplete }: { onComplete: () => void }) {
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-[100] flex flex-col items-center justify-center"
+        className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden"
         style={{ background: "#0D0A14" }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 1.2, ease: "easeInOut" }}
+        transition={{ duration: 1, ease: "easeInOut" }}
       >
-          {/* Radial glow behind everything */}
+        {/* Deep radial glow */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse 700px 600px at 50% 45%, rgba(93, 63, 160, 0.3), transparent 70%)",
+          }}
+          initial={{ opacity: 0, scale: 0.6 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 2.5, ease: "easeOut" }}
+        />
+
+        {/* Floating particles */}
+        {particles.map((p) => (
           <motion.div
-            className="absolute inset-0 pointer-events-none"
+            key={p.id}
+            className="absolute rounded-full"
             style={{
-              background:
-                "radial-gradient(ellipse 600px 500px at 50% 50%, rgba(93, 63, 160, 0.25), transparent 70%)",
+              left: `${p.x}%`,
+              top: `${p.y}%`,
+              width: p.size,
+              height: p.size,
+              background: `rgba(196, 168, 236, ${p.opacity})`,
+              boxShadow: `0 0 ${p.size * 4}px rgba(160, 127, 214, 0.5)`,
             }}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 2, ease: "easeOut" }}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{
+              opacity: [0, p.opacity, 0],
+              y: [15, -15, 15],
+            }}
+            transition={{
+              duration: p.duration,
+              delay: p.delay,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+
+        {/* Central orb */}
+        <motion.div
+          className="relative flex flex-col items-center justify-center"
+          initial={{ opacity: 0, scale: 0.4 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.8, ease: "easeOut" }}
+        >
+          {/* Outer pulsing ring */}
+          <motion.div
+            className="absolute rounded-full border border-purple-400/20"
+            style={{ width: 220, height: 220 }}
+            animate={{
+              scale: [1, 1.35, 1],
+              opacity: [0.25, 0.08, 0.25],
+            }}
+            transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute rounded-full border border-purple-400/12"
+            style={{ width: 300, height: 300 }}
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.15, 0.04, 0.15],
+            }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
           />
 
-          {/* Floating particles */}
-          {particles.map((p) => (
-            <motion.div
-              key={p.id}
-              className="absolute rounded-full"
-              style={{
-                left: `${p.x}%`,
-                top: `${p.y}%`,
-                width: p.size,
-                height: p.size,
-                background: `rgba(196, 168, 236, ${p.opacity})`,
-                boxShadow: `0 0 ${p.size * 3}px rgba(160, 127, 214, 0.4)`,
-              }}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{
-                opacity: [0, p.opacity, 0],
-                y: [10, -10, 10],
-              }}
-              transition={{
-                duration: p.duration,
-                delay: p.delay,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            />
-          ))}
-
-          {/* Central orb */}
+          {/* Core glow */}
           <motion.div
-            className="relative flex flex-col items-center justify-center"
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
+            className="w-36 h-36 rounded-full"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(180, 150, 230, 0.7) 0%, rgba(120, 90, 190, 0.25) 45%, transparent 70%)",
+              boxShadow:
+                "0 0 100px rgba(140, 110, 210, 0.5), inset 0 0 50px rgba(210, 190, 245, 0.25)",
+            }}
+            animate={{
+              scale: [1, 1.06, 1],
+              opacity: [0.85, 1, 0.85],
+            }}
+            transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          {/* App name */}
+          <motion.h1
+            className="absolute font-cormorant text-2xl sm:text-3xl font-light text-purple-50 whitespace-nowrap tracking-wide drop-shadow-[0_0_20px_rgba(196,168,236,0.4)]"
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9, duration: 1.2, ease: "easeOut" }}
           >
-            {/* Pulsing rings */}
-            <motion.div
-              className="absolute rounded-full border border-purple-400/20"
-              style={{ width: 180, height: 180 }}
-              animate={{
-                scale: [1, 1.3, 1],
-                opacity: [0.3, 0.1, 0.3],
-              }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.div
-              className="absolute rounded-full border border-purple-400/15"
-              style={{ width: 240, height: 240 }}
-              animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.2, 0.05, 0.2],
-              }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-            />
+            Annes Bible Space
+          </motion.h1>
+        </motion.div>
 
-            {/* Core glow */}
-            <motion.div
-              className="w-32 h-32 rounded-full"
-              style={{
-                background: "radial-gradient(circle, rgba(160, 127, 214, 0.6) 0%, rgba(93, 63, 160, 0.2) 50%, transparent 70%)",
-                boxShadow: "0 0 80px rgba(124, 92, 191, 0.4), inset 0 0 40px rgba(196, 168, 236, 0.2)",
-              }}
-              animate={{
-                scale: [1, 1.05, 1],
-                opacity: [0.8, 1, 0.8],
-              }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            />
+        {/* Subtitle */}
+        <motion.p
+          className="mt-24 font-cormorant-sc text-xs uppercase tracking-[0.35em] text-purple-300/50"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5, duration: 1.2 }}
+        >
+          A place of peace
+        </motion.p>
 
-            {/* App name */}
-            <motion.h1
-              className="absolute font-cormorant text-2xl sm:text-3xl font-light text-purple-100 whitespace-nowrap tracking-wide"
-              initial={{ opacity: 0, y: 20 }}
+        {/* Verse reveal */}
+        <AnimatePresence>
+          {phase === "verse" && (
+            <motion.div
+              className="absolute bottom-20 sm:bottom-28 left-0 right-0 px-8 text-center"
+              initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: 1, ease: "easeOut" }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
             >
-              Annes Bible Space
-            </motion.h1>
-          </motion.div>
+              <p className="font-cormorant text-lg sm:text-xl text-purple-200/80 italic leading-relaxed max-w-md mx-auto">
+                &ldquo;Be still, and know that I am God.&rdquo;
+              </p>
+              <p className="font-cormorant-sc text-xs text-purple-300/50 mt-3 uppercase tracking-widest">
+                Psalm 46:10
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-          {/* Subtitle */}
-          <motion.p
-            className="mt-20 font-cormorant-sc text-xs uppercase tracking-[0.3em] text-purple-300/40"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.3, duration: 1 }}
-          >
-            A place of peace
-          </motion.p>
-
-          {/* Verse reveal */}
-          <AnimatePresence>
-            {phase === "verse" && (
-              <motion.div
-                className="absolute bottom-24 sm:bottom-32 left-0 right-0 px-8 text-center"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 1, ease: "easeOut" }}
-              >
-                <p className="font-cormorant text-lg sm:text-xl text-purple-200/70 italic leading-relaxed max-w-md mx-auto">
-                  &ldquo;Be still, and know that I am God.&rdquo;
-                </p>
-                <p className="font-cormorant-sc text-xs text-purple-300/40 mt-3 uppercase tracking-widest">
-                  Psalm 46:10
-                </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Light burst on exit */}
-          <AnimatePresence>
-            {phase === "exit" && (
+        {/* Portal reveal light burst */}
+        <AnimatePresence>
+          {phase === "exit" && (
+            <>
+              {/* Bright center bloom */}
               <motion.div
                 className="absolute inset-0 pointer-events-none"
                 style={{
                   background:
-                    "radial-gradient(circle at 50% 50%, rgba(196, 168, 236, 0.3), transparent 60%)",
+                    "radial-gradient(circle at 50% 50%, rgba(220, 200, 255, 0.5) 0%, rgba(180, 150, 230, 0.25) 30%, rgba(93, 63, 160, 0.1) 55%, transparent 70%)",
+                }}
+                initial={{ opacity: 0, scale: 0.3 }}
+                animate={{ opacity: [0, 1, 0.6], scale: [0.3, 2.5, 4] }}
+                transition={{ duration: 1.8, ease: "easeOut" }}
+              />
+              {/* Secondary warm glow ring */}
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background:
+                    "radial-gradient(circle at 50% 50%, rgba(232, 201, 122, 0.15) 0%, transparent 50%)",
                 }}
                 initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 3 }}
-                transition={{ duration: 1.2, ease: "easeOut" }}
+                animate={{ opacity: [0, 0.8, 0], scale: [0.5, 3, 5] }}
+                transition={{ duration: 1.8, ease: "easeOut", delay: 0.1 }}
               />
-            )}
-          </AnimatePresence>
-        </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </AnimatePresence>
   );
 }

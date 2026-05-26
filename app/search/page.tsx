@@ -5,6 +5,7 @@ import Link from "next/link";
 import { searchVerses, parseReference, type Verse } from "@/lib/bible/data";
 import { getBookById } from "@/lib/bible/books";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { AnimatedContainer, AnimatedItem } from "@/components/ui/AnimatedContainer";
 import { Input } from "@/components/ui/Input";
 import { Search, ArrowRight, Bookmark } from "lucide-react";
 
@@ -77,17 +78,17 @@ export default function SearchPage() {
         </div>
       )}
 
-      <div className="space-y-3">
+      <AnimatedContainer className="space-y-3" stagger={0.06}>
         {results.map((verse, i) => {
           const book = getBookById(verse.bookId);
           if (!book) return null;
           const slug = book.name.toLowerCase().replace(/\s+/g, "-");
           return (
+            <AnimatedItem key={`${verse.bookId}-${verse.chapter}-${verse.verseNum}-${i}`}>
             <GlassCard
-              key={`${verse.bookId}-${verse.chapter}-${verse.verseNum}-${i}`}
-              className="p-4 sm:p-5 hover:bg-purple-800/10 transition-all duration-300 group active:bg-purple-800/15"
+              className="p-4 sm:p-5 hover:bg-purple-800/10 transition-all duration-200 group active:bg-purple-800/15"
             >
-              <Link href={`/bible/${slug}/${verse.chapter}#verse-${verse.verseNum}`}>
+              <Link href={`/bible/${slug}/${verse.chapter}#verse-${verse.verseNum}`} className="active:opacity-70 transition-opacity">
                 <div className="flex items-start justify-between gap-4">
                   <div className="space-y-2">
                     <p className="font-cormorant-sc text-xs text-purple-300/60 uppercase tracking-wider">
@@ -101,9 +102,10 @@ export default function SearchPage() {
                 </div>
               </Link>
             </GlassCard>
+            </AnimatedItem>
           );
         })}
-      </div>
+      </AnimatedContainer>
     </div>
   );
 }

@@ -9,6 +9,7 @@ import { useReadingStore } from "@/lib/store/useReadingStore";
 import { useUIStore } from "@/lib/store/useUIStore";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Modal } from "@/components/ui/Modal";
+import { AnimatedContainer, AnimatedItem } from "@/components/ui/AnimatedContainer";
 import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Bookmark, Highlighter, Type, X } from "lucide-react";
 
 export default function ChapterPage() {
@@ -95,7 +96,7 @@ export default function ChapterPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Link href={`/bible/${bookSlug}`} className="p-2 rounded-lg bg-purple-800/20 text-purple-300 hover:bg-purple-700/30 transition-all">
+          <Link href={`/bible/${bookSlug}`} className="p-2 rounded-lg bg-purple-800/20 text-purple-300 hover:bg-purple-700/30 transition-all active:scale-90">
             <ChevronLeft className="w-5 h-5" />
           </Link>
           <div>
@@ -111,7 +112,7 @@ export default function ChapterPage() {
               const next = sizes[(sizes.indexOf(fontSize) + 1) % sizes.length];
               useUIStore.getState().setFontSize(next);
             }}
-            className="p-2 rounded-lg bg-purple-800/20 text-purple-300 hover:bg-purple-700/30 transition-all"
+            className="p-2 rounded-lg bg-purple-800/20 text-purple-300 hover:bg-purple-700/30 transition-all active:scale-90"
             title="Change font size"
           >
             <Type className="w-4 h-4" />
@@ -124,7 +125,7 @@ export default function ChapterPage() {
         {chapterNum > 1 ? (
           <Link
             href={`/bible/${bookSlug}/${chapterNum - 1}`}
-            className="flex items-center gap-1 text-sm text-purple-300/60 hover:text-purple-300 transition-colors"
+            className="flex items-center gap-1 text-sm text-purple-300/60 hover:text-purple-300 transition-colors active:opacity-60"
           >
             <ArrowLeft className="w-4 h-4" /> Prev
           </Link>
@@ -134,7 +135,7 @@ export default function ChapterPage() {
         {chapterNum < book.chapters && (
           <Link
             href={`/bible/${bookSlug}/${chapterNum + 1}`}
-            className="flex items-center gap-1 text-sm text-purple-300/60 hover:text-purple-300 transition-colors"
+            className="flex items-center gap-1 text-sm text-purple-300/60 hover:text-purple-300 transition-colors active:opacity-60"
           >
             Next <ArrowRight className="w-4 h-4" />
           </Link>
@@ -143,13 +144,14 @@ export default function ChapterPage() {
 
       {/* Verses */}
       <GlassCard className="p-4 sm:p-6 md:p-10 space-y-1">
+        <AnimatedContainer stagger={0.015}>
         {verses.map((verse) => {
           const highlightKey = `${book.id}-${chapterNum}-${verse.verseNum}`;
           const highlightColor = highlightedVerses[highlightKey];
           return (
             <div
               key={verse.verseNum}
-              className={`flex gap-3 cursor-pointer select-none group ${fontSizeClass} ${lineHeightClass} transition-all duration-200 rounded-lg px-2 py-2.5 active:bg-purple-800/15`}
+              className={`flex gap-3 cursor-pointer select-none group ${fontSizeClass} ${lineHeightClass} transition-all duration-200 rounded-lg px-2 py-2.5 active:bg-purple-800/15 active:scale-[0.995]`}
               onClick={(e) => handleVerseClick(verse, e)}
               onTouchStart={() => handleTouchStart(verse)}
               onTouchEnd={handleTouchEnd}
@@ -172,6 +174,7 @@ export default function ChapterPage() {
             </div>
           );
         })}
+        </AnimatedContainer>
       </GlassCard>
 
       {/* Context Menu Modal */}

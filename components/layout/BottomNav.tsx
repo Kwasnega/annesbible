@@ -37,7 +37,7 @@ export function BottomNav() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex flex-col items-center gap-1 px-2 py-2 rounded-xl transition-all duration-300 min-w-[52px]",
+                "flex flex-col items-center gap-1 px-2 py-2 rounded-xl transition-all duration-200 min-w-[52px] active:scale-90",
                 isActive
                   ? "text-purple-300"
                   : "text-purple-200/40 active:text-purple-200/70"

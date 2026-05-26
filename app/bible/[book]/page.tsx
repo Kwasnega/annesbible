@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { getBookBySlug, BOOKS } from "@/lib/bible/books";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { AnimatedContainer, AnimatedItem } from "@/components/ui/AnimatedContainer";
 import { ArrowLeft } from "lucide-react";
 
 export default function BookPage() {
@@ -28,7 +29,7 @@ export default function BookPage() {
       <div className="flex items-center gap-4">
         <Link
           href="/bible"
-          className="p-2 rounded-lg bg-purple-800/20 text-purple-300 hover:bg-purple-700/30 transition-all"
+          className="p-2 rounded-lg bg-purple-800/20 text-purple-300 hover:bg-purple-700/30 transition-all active:scale-90"
         >
           <ArrowLeft className="w-5 h-5" />
         </Link>
@@ -42,20 +43,23 @@ export default function BookPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-4 xs:grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-3">
+      <AnimatedContainer className="grid grid-cols-4 xs:grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-3" stagger={0.02}>
         {chapters.map((ch) => (
           <Link
             key={ch}
             href={`/bible/${book.name.toLowerCase().replace(/\s+/g, "-")}/${ch}`}
+            className="active:scale-[0.96] transition-transform duration-150"
           >
-            <GlassCard className="p-4 flex items-center justify-center hover:bg-purple-800/15 hover:border-purple-400/30 transition-all duration-300 group active:bg-purple-800/20">
+            <AnimatedItem>
+            <GlassCard className="p-4 flex items-center justify-center hover:bg-purple-800/15 hover:border-purple-400/30 transition-all duration-200 group active:bg-purple-800/20">
               <span className="font-cormorant text-lg text-purple-200 group-hover:text-purple-100 group-active:text-purple-100 transition-colors">
                 {ch}
               </span>
             </GlassCard>
+            </AnimatedItem>
           </Link>
         ))}
-      </div>
+      </AnimatedContainer>
     </div>
   );
 }
