@@ -5,7 +5,8 @@ import { useJournalStore } from "@/lib/store/useJournalStore";
 import { formatDate, formatShortDate } from "@/lib/utils/date";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { AnimatedContainer, AnimatedItem } from "@/components/ui/AnimatedContainer";
-import { Plus, PenLine, Trash2 } from "lucide-react";
+import { Plus, PenLine, Trash2, Tag } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function JournalPage() {
   const { entries, deleteEntry } = useJournalStore();
@@ -63,9 +64,28 @@ export default function JournalPage() {
                   <h3 className="font-cormorant text-xl text-purple-100 mb-2">
                     {entry.title || "Untitled Entry"}
                   </h3>
-                  <p className="text-sm text-purple-200/40 line-clamp-3">
-                    {entry.content.replace(/<[^>]*>/g, " ").trim()}
-                  </p>
+                  <div
+                    className="text-sm text-purple-200/40 line-clamp-3 space-y-1"
+                    dangerouslySetInnerHTML={{
+                      __html: entry.content
+                        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+                        .replace(/\*(.*?)\*/g, "<em>$1</em>")
+                        .replace(/\n/g, "<br/>")
+                        .substring(0, 300),
+                    }}
+                  />
+                  {entry.tags && entry.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mt-3">
+                      {entry.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="text-[10px] px-2 py-0.5 rounded-full bg-purple-800/25 text-purple-300/60 border border-purple-700/20"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </GlassCard>
               </Link>
               <button
@@ -81,6 +101,21 @@ export default function JournalPage() {
           ))}
         </AnimatedContainer>
       )}
+
+      {/* Mobile FAB for new entry */}
+      <motion.div
+        className="md:hidden fixed bottom-20 right-4 z-40"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.3, type: "spring", stiffness: 260, damping: 20 }}
+      >
+        <Link
+          href="/journal/new"
+          className="flex items-center justify-center w-14 h-14 rounded-full bg-purple-600 text-purple-100 shadow-lg shadow-purple-900/40 active:scale-90 transition-transform"
+        >
+          <Plus className="w-6 h-6" />
+        </Link>
+      </motion.div>
     </div>
   );
 }

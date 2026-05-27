@@ -8,12 +8,13 @@ export interface JournalEntry {
   title?: string;
   content: string;
   mood: string | null;
+  tags: string[];
   createdAt: string;
 }
 
 interface JournalStore {
   entries: JournalEntry[];
-  draft: { title: string; content: string; mood: string | null };
+  draft: { title: string; content: string; mood: string | null; tags: string[] };
   addEntry: (entry: JournalEntry) => void;
   updateEntry: (id: string, updates: Partial<JournalEntry>) => void;
   deleteEntry: (id: string) => void;
@@ -25,7 +26,7 @@ export const useJournalStore = create<JournalStore>()(
   persist(
     (set) => ({
       entries: [],
-      draft: { title: "", content: "", mood: null },
+      draft: { title: "", content: "", mood: null, tags: [] },
       addEntry: (entry) =>
         set((state) => ({ entries: [entry, ...state.entries] })),
       updateEntry: (id, updates) =>
@@ -41,7 +42,7 @@ export const useJournalStore = create<JournalStore>()(
       setDraft: (draft) =>
         set((state) => ({ draft: { ...state.draft, ...draft } })),
       clearDraft: () =>
-        set({ draft: { title: "", content: "", mood: null } }),
+        set({ draft: { title: "", content: "", mood: null, tags: [] } }),
     }),
     { name: "anne-journal-store" }
   )

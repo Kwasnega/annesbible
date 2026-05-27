@@ -7,8 +7,10 @@ import { MOODS } from "@/lib/bible/moodVerses";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import { ArrowLeft, Bold, Italic, List, Quote } from "lucide-react";
+import { ArrowLeft, Bold, Italic, List, Quote, Tag } from "lucide-react";
 import Link from "next/link";
+
+const JOURNAL_TAGS = ["Prayer", "Gratitude", "Struggle", "Worship", "Reflection", "Hope"];
 
 export default function NewJournalPage() {
   const router = useRouter();
@@ -16,6 +18,7 @@ export default function NewJournalPage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [mood, setMood] = useState<string | null>(null);
+  const [tags, setTags] = useState<string[]>([]);
 
   const handleSave = () => {
     if (!content.trim()) return;
@@ -24,10 +27,17 @@ export default function NewJournalPage() {
       title: title.trim() || undefined,
       content: content.trim(),
       mood: mood || null,
+      tags,
       createdAt: new Date().toISOString(),
     };
     addEntry(entry);
     router.push("/journal");
+  };
+
+  const toggleTag = (tag: string) => {
+    setTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    );
   };
 
   const insertFormat = (before: string, after: string = "") => {
@@ -63,7 +73,7 @@ export default function NewJournalPage() {
         />
 
         <div className="space-y-2">
-          <p className="text-xs text-purple-200/40 font-cormorant-sc uppercase tracking-wider">Mood</p>
+          <p className="text-xs text-purple-200/40 font-sans uppercase tracking-wider">Mood</p>
           <div className="flex flex-wrap gap-2">
             {MOODS.map((m) => (
               <button
@@ -82,18 +92,37 @@ export default function NewJournalPage() {
           </div>
         </div>
 
+        <div className="space-y-2">
+          <p className="text-xs text-purple-200/40 font-sans uppercase tracking-wider">Tags</p>
+          <div className="flex flex-wrap gap-2">
+            {JOURNAL_TAGS.map((tag) => (
+              <button
+                key={tag}
+                onClick={() => toggleTag(tag)}
+                className={`px-3 py-1.5 rounded-full text-xs border transition-all duration-200 active:scale-90 ${
+                  tags.includes(tag)
+                    ? "border-purple-400/50 bg-purple-800/30 text-purple-200"
+                    : "border-purple-700/20 text-purple-300/50 hover:border-purple-500/30 hover:text-purple-300/70"
+                }`}
+              >
+                {tags.includes(tag) ? "✓ " : ""}{tag}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="glass-card rounded-xl overflow-hidden">
           <div className="flex items-center gap-1 p-2 border-b border-glass-border">
-            <button onClick={() => insertFormat("**", "**")} className="p-2.5 rounded-lg hover:bg-purple-800/20 text-purple-300/60 hover:text-purple-200 active:bg-purple-800/30 transition-all active:scale-90">
+            <button onMouseDown={(e) => e.preventDefault()} onClick={() => insertFormat("**", "**")} className="p-2.5 rounded-lg hover:bg-purple-800/20 text-purple-300/60 hover:text-purple-200 active:bg-purple-800/30 transition-all active:scale-90">
               <Bold className="w-[18px] h-[18px]" />
             </button>
-            <button onClick={() => insertFormat("*", "*")} className="p-2.5 rounded-lg hover:bg-purple-800/20 text-purple-300/60 hover:text-purple-200 active:bg-purple-800/30 transition-all active:scale-90">
+            <button onMouseDown={(e) => e.preventDefault()} onClick={() => insertFormat("*", "*")} className="p-2.5 rounded-lg hover:bg-purple-800/20 text-purple-300/60 hover:text-purple-200 active:bg-purple-800/30 transition-all active:scale-90">
               <Italic className="w-[18px] h-[18px]" />
             </button>
-            <button onClick={() => insertFormat("> ", "")} className="p-2.5 rounded-lg hover:bg-purple-800/20 text-purple-300/60 hover:text-purple-200 active:bg-purple-800/30 transition-all active:scale-90">
+            <button onMouseDown={(e) => e.preventDefault()} onClick={() => insertFormat("> ", "")} className="p-2.5 rounded-lg hover:bg-purple-800/20 text-purple-300/60 hover:text-purple-200 active:bg-purple-800/30 transition-all active:scale-90">
               <Quote className="w-[18px] h-[18px]" />
             </button>
-            <button onClick={() => insertFormat("- ", "")} className="p-2.5 rounded-lg hover:bg-purple-800/20 text-purple-300/60 hover:text-purple-200 active:bg-purple-800/30 transition-all active:scale-90">
+            <button onMouseDown={(e) => e.preventDefault()} onClick={() => insertFormat("- ", "")} className="p-2.5 rounded-lg hover:bg-purple-800/20 text-purple-300/60 hover:text-purple-200 active:bg-purple-800/30 transition-all active:scale-90">
               <List className="w-[18px] h-[18px]" />
             </button>
           </div>

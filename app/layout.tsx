@@ -4,6 +4,7 @@ import "./globals.css";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { PageWrapper } from "@/components/layout/PageWrapper";
+import { SearchOverlay } from "@/components/SearchOverlay";
 import { SplashProvider } from "@/components/SplashProvider";
 
 const dmSans = DM_Sans({
@@ -58,6 +59,7 @@ export default function RootLayout({
             </main>
           </div>
           <BottomNav />
+          <SearchOverlay />
         </SplashProvider>
       </body>
     </html>

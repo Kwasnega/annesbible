@@ -50,6 +50,15 @@ export const MOOD_VERSES: Record<string, MoodVerse[]> = {
   ],
 };
 
+export const MOOD_DESCRIPTIONS: Record<string, string> = {
+  sad: "When sorrow weighs heavy, these verses remind you that God is close to the brokenhearted and saves those who are crushed in spirit.",
+  anxious: "For restless hearts and racing minds — words of peace that still the storm and remind you to cast every care on Him.",
+  tired: "When weariness overwhelms, find rest in the One who invites the weary to come and promises strength to soar on eagle's wings.",
+  confused: "When the path ahead is unclear, these verses offer light for the next step and wisdom for the journey.",
+  grateful: "For hearts overflowing with thanks — celebrate the goodness of God whose love endures forever.",
+  peaceful: "When calm settles over your soul, rest in the peace that surpasses all understanding and guards your heart.",
+};
+
 export const MOODS = [
   { key: "sad", label: "Sad", emoji: "😔", color: "#C47A8A" },
   { key: "anxious", label: "Anxious", emoji: "😰", color: "#7B8EC7" },

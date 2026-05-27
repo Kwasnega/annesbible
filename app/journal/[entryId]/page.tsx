@@ -53,11 +53,18 @@ export default function EntryPage() {
           </Link>
           <div>
             <p className="text-xs text-purple-200/40">{formatDate(entry.createdAt)}</p>
-            {entry.mood && (
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-800/30 text-purple-300/70 capitalize">
-                {entry.mood}
-              </span>
-            )}
+            <div className="flex flex-wrap gap-1.5 mt-1.5">
+              {entry.mood && (
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-800/30 text-purple-300/70 capitalize">
+                  {entry.mood}
+                </span>
+              )}
+              {entry.tags && entry.tags.map((tag) => (
+                <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full bg-purple-800/25 text-purple-300/60 border border-purple-700/20">
+                  {tag}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -116,7 +123,7 @@ export default function EntryPage() {
               <h1 className="font-cormorant text-2xl md:text-3xl text-purple-100">{entry.title}</h1>
             )}
             <div
-              className="font-cormorant text-lg text-purple-100/90 leading-relaxed space-y-3"
+              className="font-cormorant text-lg text-purple-100/90 leading-relaxed space-y-3 [&_strong]:text-purple-200 [&_em]:italic [&_em]:text-purple-200/80 [&_blockquote]:border-l-2 [&_blockquote]:border-purple-500/40 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-purple-300/80 [&_li]:ml-4 [&_li]:list-disc"
               dangerouslySetInnerHTML={{ __html: renderContent(entry.content) }}
             />
           </div>

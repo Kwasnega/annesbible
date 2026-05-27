@@ -27,18 +27,41 @@ function generateParticles(count: number): Particle[] {
 
 export function SplashScreen({ onComplete }: { onComplete: () => void }) {
   const [phase, setPhase] = useState<"enter" | "verse" | "exit">("enter");
+  const [typedVerse, setTypedVerse] = useState("");
+  const [showCursor, setShowCursor] = useState(true);
   const particles = useMemo(() => generateParticles(50), []);
 
   useEffect(() => {
     const t1 = setTimeout(() => setPhase("verse"), 1600);
-    const t2 = setTimeout(() => setPhase("exit"), 3800);
-    const t3 = setTimeout(() => onComplete(), 5800);
+    const t2 = setTimeout(() => setPhase("exit"), 4200);
+    const t3 = setTimeout(() => onComplete(), 6200);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
       clearTimeout(t3);
     };
   }, [onComplete]);
+
+  // Typewriter effect for the verse
+  useEffect(() => {
+    if (phase !== "verse") {
+      setTypedVerse("");
+      setShowCursor(true);
+      return;
+    }
+    const fullText = "Be still, and know that I am God.";
+    let index = 0;
+    const interval = setInterval(() => {
+      if (index <= fullText.length) {
+        setTypedVerse(fullText.slice(0, index));
+        index++;
+      } else {
+        clearInterval(interval);
+        setTimeout(() => setShowCursor(false), 800);
+      }
+    }, 55);
+    return () => clearInterval(interval);
+  }, [phase]);
 
   const isExiting = phase === "exit";
 
@@ -136,16 +159,17 @@ export function SplashScreen({ onComplete }: { onComplete: () => void }) {
           transition={{ duration: isExiting ? 1 : 3.5, repeat: isExiting ? 0 : Infinity, ease: "easeInOut" }}
         />
 
-        {/* App name */}
+        {/* App name with dramatic shimmer */}
         <motion.h1
-          className="absolute font-cormorant text-2xl sm:text-3xl font-light text-purple-50 whitespace-nowrap tracking-wide drop-shadow-[0_0_20px_rgba(196,168,236,0.4)]"
-          initial={{ opacity: 0, y: 25 }}
+          className="absolute font-cormorant text-3xl sm:text-4xl font-light whitespace-nowrap tracking-[0.15em] shimmer-text"
+          initial={{ opacity: 0, y: 30, scale: 0.85 }}
           animate={{
             opacity: isExiting ? 0 : 1,
-            y: isExiting ? -20 : 0,
-            filter: isExiting ? "blur(6px)" : "blur(0px)",
+            y: isExiting ? -30 : 0,
+            scale: isExiting ? 1.15 : 1,
+            filter: isExiting ? "blur(8px)" : "blur(0px)",
           }}
-          transition={{ duration: 1, ease: "easeOut" }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
         >
           Annes Bible Space
         </motion.h1>
@@ -164,7 +188,7 @@ export function SplashScreen({ onComplete }: { onComplete: () => void }) {
         A place of peace
       </motion.p>
 
-      {/* Verse reveal */}
+      {/* Verse reveal with typewriter effect */}
       <AnimatePresence>
         {phase === "verse" && (
           <motion.div
@@ -174,12 +198,21 @@ export function SplashScreen({ onComplete }: { onComplete: () => void }) {
             exit={{ opacity: 0, y: -15, filter: "blur(4px)" }}
             transition={{ duration: 1.2, ease: "easeOut" }}
           >
-            <p className="font-cormorant text-lg sm:text-xl text-purple-200/80 italic leading-relaxed max-w-md mx-auto">
-              &ldquo;Be still, and know that I am God.&rdquo;
+            <p className="font-cormorant text-lg sm:text-xl text-purple-200/80 italic leading-relaxed max-w-md mx-auto min-h-[3.5rem]">
+              &ldquo;{typedVerse}
+              {showCursor && (
+                <span className="inline-block w-[2px] h-[1.1em] bg-purple-300/70 ml-[2px] align-middle" style={{ animation: "cursorBlink 1s step-end infinite" }} />
+              )}
+              &rdquo;
             </p>
-            <p className="font-cormorant-sc text-xs text-purple-300/50 mt-3 uppercase tracking-widest">
+            <motion.p
+              className="font-cormorant-sc text-xs text-purple-300/50 mt-3 uppercase tracking-widest"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: typedVerse.length >= 33 ? 1 : 0 }}
+              transition={{ duration: 0.6 }}
+            >
               Psalm 46:10
-            </p>
+            </motion.p>
           </motion.div>
         )}
       </AnimatePresence>

@@ -17,31 +17,39 @@ export default function SearchPage() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Verse[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
+  const [searching, setSearching] = useState(false);
 
   const handleSearch = (val: string) => {
     setQuery(val);
     if (val.length < 2) {
       setResults([]);
       setHasSearched(false);
+      setSearching(false);
       return;
     }
     setHasSearched(true);
+    setSearching(true);
 
-    if (isReference(val)) {
-      const ref = parseReference(val);
-      if (ref) {
-        const verses = searchVerses(ref.book.name);
-        setResults(
-          verses
-            .filter((v) => v.chapter === ref.chapter)
-            .slice(0, 5)
-        );
-        return;
+    // Simulate a brief search delay for skeleton visibility
+    setTimeout(() => {
+      if (isReference(val)) {
+        const ref = parseReference(val);
+        if (ref) {
+          const verses = searchVerses(ref.book.name);
+          setResults(
+            verses
+              .filter((v) => v.chapter === ref.chapter)
+              .slice(0, 5)
+          );
+          setSearching(false);
+          return;
+        }
       }
-    }
 
-    const verses = searchVerses(val);
-    setResults(verses);
+      const verses = searchVerses(val);
+      setResults(verses);
+      setSearching(false);
+    }, 300);
   };
 
   return (
@@ -70,11 +78,23 @@ export default function SearchPage() {
         </div>
       )}
 
-      {hasSearched && results.length === 0 && (
+      {hasSearched && results.length === 0 && !searching && (
         <div className="text-center py-16">
           <p className="font-cormorant text-xl text-purple-200/30 italic">
             No verses found. Try another word.
           </p>
+        </div>
+      )}
+
+      {searching && (
+        <div className="space-y-3">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="glass-card p-4 sm:p-5 space-y-3">
+              <div className="h-3 skeleton w-32" />
+              <div className="h-4 skeleton w-[90%]" />
+              <div className="h-4 skeleton w-[70%]" />
+            </div>
+          ))}
         </div>
       )}
 

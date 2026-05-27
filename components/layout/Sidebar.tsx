@@ -12,6 +12,7 @@ import {
   PenLine,
   Music,
   Settings,
+  Command,
 } from "lucide-react";
 
 const navItems = [
@@ -29,10 +30,22 @@ export function Sidebar() {
 
   return (
     <aside className="hidden md:flex fixed left-0 top-0 h-screen w-[240px] flex-col glass-card border-r border-glass-border z-40">
-      <div className="p-6 pb-4">
+      <div className="p-6 pb-4 space-y-3">
         <h1 className="font-cormorant text-xl font-semibold text-purple-100 leading-tight">
           Annes Bible Space
         </h1>
+        <button
+          onClick={() => {
+            window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
+          }}
+          className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-purple-700/20 text-purple-300/40 text-xs hover:border-purple-500/30 hover:text-purple-300/60 transition-all active:scale-[0.98]"
+        >
+          <Search className="w-3.5 h-3.5" />
+          <span className="flex-1 text-left">Search verses...</span>
+          <kbd className="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-purple-800/30 text-purple-300/50 font-sans text-[10px]">
+            <Command className="w-2.5 h-2.5" /> K
+          </kbd>
+        </button>
       </div>
 
       <nav className="flex-1 flex flex-col gap-1 px-3 py-2">

@@ -20,6 +20,7 @@ export default function ChapterPage() {
   const { fontSize } = useUIStore();
   const { highlightedVerses, toggleHighlight, setLastPosition } = useReadingStore();
   const [verses, setVerses] = useState<Verse[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedVerse, setSelectedVerse] = useState<Verse | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuPos, setMenuPos] = useState({ x: 0, y: 0 });
@@ -27,9 +28,11 @@ export default function ChapterPage() {
 
   useEffect(() => {
     if (book) {
+      setLoading(true);
       const vs = getVersesForChapter(book.id, chapterNum);
       setVerses(vs);
       setLastPosition(book.id, chapterNum, 1);
+      setLoading(false);
     }
   }, [book, chapterNum, setLastPosition]);
 
@@ -143,7 +146,20 @@ export default function ChapterPage() {
       </div>
 
       {/* Verses */}
-      <GlassCard className="p-4 sm:p-6 md:p-10 space-y-1">
+      <GlassCard className="p-4 sm:p-6 md:p-10 space-y-1 min-h-[200px]">
+        {loading ? (
+          <div className="space-y-3">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="flex gap-3 py-2">
+                <div className="w-6 h-4 skeleton shrink-0 mt-1" />
+                <div className="flex-1 space-y-2">
+                  <div className="h-4 skeleton w-[92%]" />
+                  <div className="h-4 skeleton w-[75%]" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
         <AnimatedContainer stagger={0.015}>
         {verses.map((verse) => {
           const highlightKey = `${book.id}-${chapterNum}-${verse.verseNum}`;
@@ -165,7 +181,7 @@ export default function ChapterPage() {
                   : undefined
               }
             >
-              <span className="font-cormorant-sc text-purple-300/40 text-sm mt-1 shrink-0 select-none min-w-[1.5rem]">
+              <span className="font-sans text-gold-bright text-sm mt-1 shrink-0 select-none min-w-[1.5rem] font-variant-small-caps opacity-80">
                 {verse.verseNum}
               </span>
               <span className="font-cormorant text-purple-100/90">
@@ -175,6 +191,7 @@ export default function ChapterPage() {
           );
         })}
         </AnimatedContainer>
+        )}
       </GlassCard>
 
       {/* Context Menu Modal */}

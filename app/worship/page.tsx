@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { AnimatedContainer, AnimatedItem } from "@/components/ui/AnimatedContainer";
-import { CloudRain, Piano, Trees, Play, Pause } from "lucide-react";
+import { CloudRain, Piano, Trees, Play, Pause, Music } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface AmbientTrack {
@@ -24,10 +24,12 @@ const PLAYLISTS = [
   {
     title: "Peaceful Worship",
     embed: "https://open.spotify.com/embed/playlist/37i9dQZF1DX9lAYMw7KoAO",
+    url: "https://open.spotify.com/playlist/37i9dQZF1DX9lAYMw7KoAO",
   },
   {
     title: "Hillsong Acoustic",
     embed: "https://open.spotify.com/embed/playlist/17tw7L3cHFF9FcsFuiTcJA",
+    url: "https://open.spotify.com/playlist/17tw7L3cHFF9FcsFuiTcJA",
   },
 ];
 
@@ -123,6 +125,15 @@ export default function WorshipPage() {
                 className="rounded-xl"
                 style={{ border: "none" }}
               />
+              <a
+                href={pl.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 mt-3 text-xs text-purple-300/50 hover:text-purple-300 transition-colors active:opacity-60"
+              >
+                <Music className="w-3 h-3" />
+                Open in Spotify
+              </a>
             </GlassCard>
           ))}
         </div>

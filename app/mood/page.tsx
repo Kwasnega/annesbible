@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { MOODS, MOOD_VERSES } from "@/lib/bible/moodVerses";
+import { MOODS, MOOD_VERSES, MOOD_DESCRIPTIONS } from "@/lib/bible/moodVerses";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { AnimatedContainer, AnimatedItem } from "@/components/ui/AnimatedContainer";
 import { motion, AnimatePresence } from "framer-motion";
@@ -59,9 +59,14 @@ function MoodContent() {
             transition={{ duration: 0.4, ease: "easeInOut" }}
             className="space-y-4 overflow-hidden"
           >
-            <p className="font-cormorant-sc text-xs text-purple-300/50 uppercase tracking-wider">
-              Some words for you today
-            </p>
+            <div className="space-y-2">
+              <p className="font-cormorant text-lg text-purple-200/70 italic leading-relaxed max-w-2xl">
+                {MOOD_DESCRIPTIONS[selectedMood]}
+              </p>
+              <p className="font-sans text-[10px] text-purple-300/40 uppercase tracking-widest">
+                {verses.length} verses curated for you
+              </p>
+            </div>
             <AnimatedContainer className="space-y-3" stagger={0.08}>
               {verses.map((verse, i) => (
                 <AnimatedItem key={i}>
